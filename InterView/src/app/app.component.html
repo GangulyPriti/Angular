@@ -1,0 +1,23 @@
+<!--<div *ngIf="course.length>0; then listOfCourse else noCourses"></div>
+<ng-template #listOfCourse>
+  <p>List Of courses</p>
+</ng-template>
+<ng-template #noCourses>
+  <p>No course Yet</p>
+</ng-template>-->
+<!--
+<div [hidden] = "course.length == 0">
+  List of courses
+</div>
+<div [hidden] = "course.length >0">
+  No courser yet
+</div>
+-->
+<ul class="nav nav-pills">
+  <li class="active"><a href="">Map View</a></li>
+  <li><a href="">List View</a></li>
+</ul>
+<div>
+  <div>Map View Content</div>
+  <div>List View Content</div>
+</div>
