@@ -8,6 +8,6 @@ import { Component } from '@angular/core';
 export class AppComponent {
   course = {
     money : 5.324
-    
+
   }
 }
