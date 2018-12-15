@@ -1,0 +1,10 @@
+1/10/2018
+-----------
+Task 1 :
+start Angular again from the beginning targeetting it to complete it by the end of December
+
+
+cover typescript concept with javascript(important for Interview)
+
+
+
