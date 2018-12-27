@@ -1,0 +1,236 @@
+import { FormsModule } from '@angular/forms';
+recipe-details.component.html------------------->
+<div class="row">
+  <div class="col-xs-12">
+    <img src="" alt="" class="img-responsive">
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <img [src]="detailedRecipe.imagePath"
+         alt="{{detailedRecipe.name}}"
+         class="img-responsive"
+         style="max-height:200px; max-width:300px" />
+    <h1>{{detailedRecipe.name}}</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="btn-group">
+      <button class="btn btn-primary dropdown-toggle">
+        Manage Recipe<span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">To shopping list</a></li>
+        <li><a href="#">Edit recipe</a></li>
+        <li><a href="#">Delete Recipe</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    {{detailedRecipe.name}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    Ingradients
+  </div>
+</div>
+recipe-details.compoennt.ts-------------------->
+@Input() detailedRecipe: Recipe;
+recipes.component.html---------------------->
+<div class="row">
+    <div class="col-md-5">
+      <app-recipe-list (recipedDetails)="showRecipedDetails($event)"></app-recipe-list>
+    </div>
+    <div class="col-md-7">
+        <app-recipe-detail
+                           *ngIf="recipeDescription; else infoText"
+                           [detailedRecipe]="recipeDescription">
+        </app-recipe-detail>
+      <ng-template #infoText>
+        <p>Please select a recipe!</p>
+      </ng-template>
+    </div>
+</div>
+recipes.component.ts------------->
+export class RecipesComponent implements OnInit {
+  recipeDescription: Recipe;
+  constructor() { }
+
+  ngOnInit() {
+  }
+  showRecipedDetails(selectedRecipe: Recipe) {
+    this.recipeDescription = selectedRecipe;
+  }
+
+}
+recipe-list.component.ts------------->
+export class RecipeListComponent implements OnInit {
+  @Output() recipedDetails = new EventEmitter<Recipe>();
+  recipes: Recipe[] = [
+    new Recipe('the test recipe','this recipe is in test','https://realhousemoms.com' +
+      '/wp-content/uploads/Honey-Butter-Chicken-Easy-Dinner-Recipe-HERO.jpg'),
+    new Recipe('the test recipe one','this recipe is in test one',
+      'https://thewoksoflife.com/wp-content/uploads/2018/06/vegetable-chow-mein-16.jpg')
+  ];
+  
+  constructor() { }
+
+  ngOnInit() {
+  }
+  onRecipeSelect(recipe: Recipe) {
+    this.recipedDetails.emit(recipe);
+  }
+}
+recipe-itm-component.ts--------------->
+export class RecipeItemComponent implements OnInit {
+  @Input() recipe: Recipe;
+  @Output() recipeDetails = new EventEmitter<void>();
+  constructor() { }
+
+  ngOnInit() {
+  }
+  showDetails() {
+    console.log("Details");
+    this.recipeDetails.emit();
+  }
+
+}
+recipe-item.component.html------------>
+<a href="#" class="list-group-item clearfix" (click)="showDetails()">
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{recipe.name}}</h4>
+    <p class="list-group-item-text">{{recipe.description}}</p>
+  </div>
+  <span class="pull-right">
+    <img [src]="recipe.imagePath"
+         alt="{{recipe.name}}"
+         class="img-responsive"
+         style="max-height: 50px">
+  </span>
+</a>
+app-component.html------------------->
+<app-header (featureSelected)="onNavigate($event)"></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <app-recipes *ngIf="loadedFeature === 'Recipe'"></app-recipes>
+            <app-shopping-list *ngIf="loadedFeature != 'Recipe'"></app-shopping-list>
+        </div>
+    </div>
+</div>
+app.component.ts---------------->
+export class AppComponent {
+  loadedFeature = 'Recipe';
+  onNavigate(feature: string) {
+    this.loadedFeature = feature;
+  }
+
+}
+
+recipe-list.component.html------------------------>
+<div class="row">
+  <div class="col-xs-12">
+    <button class="btn btn-success">New Recipe</button>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12">
+      <app-recipe-item *ngFor="let recipeElement of recipes"
+                       [recipe]="recipeElement"
+                       (recipeDetails)="onRecipeSelect(recipeElement)"></app-recipe-item>
+  </div>
+</div>
+<hr>
+header.component.ts------------------------------>
+export class HeaderComponent implements OnInit {
+  @Output() featureSelected = new EventEmitter<String>();
+  constructor() { }
+
+  ngOnInit() {
+  }
+  onSelect(feature: string) {
+    this.featureSelected.emit(feature);
+  }
+
+}
+header.component.html-------------------------------->
+<nav class = "navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a href="#" class="navbar-brand">Recipe Book</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#" (click)="onSelect('Recipe')">Recipes</a></li>
+        <li><a href="#" (click)="onSelect('Shopping List')">Shopping List</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" role="button">Manage<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Save data</a></li>
+            <li><a href="#">Fetch data</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+shopping-list-component.html-------------->
+<div class="row">
+    <div class="col-md-10">
+        <app-shopping-edit (newItem)="onAddedIngradient($event)"></app-shopping-edit>
+        <hr>
+        <ul class="list-group">
+          <a class="list-group-item"
+             style="cursor: pointer"
+          *ngFor="let ingradients of ingradient">
+            {{ ingradients.name }} ({{ ingradients.amount }})
+          </a>
+        </ul>
+    </div>
+</div>
+shoppinglist.ts--------------->
+  onAddedIngradient(newaddedItem: Ingradients) {
+    this.ingradient.push(newaddedItem);
+  }
+}
+...............>
+export class ShoppingEditComponent implements OnInit {
+  @ViewChild('nameInput') nameInputRef: ElementRef;
+  @ViewChild('amountInput') amountInputRef: ElementRef;
+  @Output() newItem = new EventEmitter<Ingradients>();
+  constructor() { }
+
+  ngOnInit() {
+  }
+  onAddItems() {
+    const newIngradient = new
+      Ingradients(this.nameInputRef.nativeElement.value, this.amountInputRef.nativeElement.value);
+    this.newItem.emit(newIngradient);
+  }
+
+}
+------------------------>
+<div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="name"></label>
+          <input type="text" id="name"
+                 class="form-control" #nameInput>
+        </div>
+        <div class="col-sm-2">
+          <label for="amount"></label>
+          <input type="number" id="amount"
+                 class="form-control" #amountInput>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button class="btn btn-success" type="submit" (click)="onAddItems()">Add</button>&nbsp;&nbsp;
+ ---------->
