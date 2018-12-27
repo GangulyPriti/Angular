@@ -1,5 +1,12 @@
 <div class="container">
   <app-game-control
-  (cameStart)="onGameStarted($event)">
+  (GameStart)="onGameStarted($event)">
   </app-game-control>
+
+  <div *ngFor="let value of incrementingNumber">
+        <app-odd *ngIf="value%2!=0" [oddElement]="value"></app-odd>
+        <app-even *ngIf="value%2==0" [evenElement]="value"></app-even>
+  </div>
+
+</div>
 

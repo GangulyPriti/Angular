@@ -6,22 +6,24 @@ import { Component, OnInit, Output, EventEmitter} from '@angular/core';
   styleUrls: ['./game-control.component.css']
 })
 export class GameControlComponent implements OnInit {
-  @Output('incrementedNumber') incrementedNumber = new EventEmitter<{numberValue: number}>();
-
+  @Output('GameStart') incrementedNumber = new EventEmitter<{numberValue: any}>();
+  interval;
+  i=0;
   constructor() { }
 
-  ngOnInit() {
-    setInterval(function(){
-      if (i == 100) clearInterval(this);
-      else console.log( 'Currently at ' + (i++) );
-    }, 1000);
-  }
+  ngOnInit() {}
   onGameStart() {
-    console.log('game start');
-    this.incrementedNumber.emit()
+    console.log('Game start');
+    this.interval =  setInterval(()=>{
+      this.i++;
+      this.incrementedNumber.emit({numberValue : this.i})
+    },1000);
   }
   onGameStop() {
     console.log('Game Stop');
+    if (this.interval) {
+    clearInterval(this.interval);
+    }
   }
 
 }
