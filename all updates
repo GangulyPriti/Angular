@@ -182,3 +182,55 @@ header.component.html-------------------------------->
     </div>
   </div>
 </nav>
+shopping-list-component.html-------------->
+<div class="row">
+    <div class="col-md-10">
+        <app-shopping-edit (newItem)="onAddedIngradient($event)"></app-shopping-edit>
+        <hr>
+        <ul class="list-group">
+          <a class="list-group-item"
+             style="cursor: pointer"
+          *ngFor="let ingradients of ingradient">
+            {{ ingradients.name }} ({{ ingradients.amount }})
+          </a>
+        </ul>
+    </div>
+</div>
+shoppinglist.ts--------------->
+  onAddedIngradient(newaddedItem: Ingradients) {
+    this.ingradient.push(newaddedItem);
+  }
+}
+...............>
+export class ShoppingEditComponent implements OnInit {
+  @ViewChild('nameInput') nameInputRef: ElementRef;
+  @ViewChild('amountInput') amountInputRef: ElementRef;
+  @Output() newItem = new EventEmitter<Ingradients>();
+  constructor() { }
+
+  ngOnInit() {
+  }
+  onAddItems() {
+    const newIngradient = new
+      Ingradients(this.nameInputRef.nativeElement.value, this.amountInputRef.nativeElement.value);
+    this.newItem.emit(newIngradient);
+  }
+
+}
+------------------------>
+<div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="name"></label>
+          <input type="text" id="name"
+                 class="form-control" #nameInput>
+        </div>
+        <div class="col-sm-2">
+          <label for="amount"></label>
+          <input type="number" id="amount"
+                 class="form-control" #amountInput>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button class="btn btn-success" type="submit" (click)="onAddItems()">Add</button>&nbsp;&nbsp;
+ ---------->
