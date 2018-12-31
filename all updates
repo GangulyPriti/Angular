@@ -1,236 +1,162 @@
+ap.module---->
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-recipe-details.component.html------------------->
-<div class="row">
-  <div class="col-xs-12">
-    <img src="" alt="" class="img-responsive">
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    <img [src]="detailedRecipe.imagePath"
-         alt="{{detailedRecipe.name}}"
-         class="img-responsive"
-         style="max-height:200px; max-width:300px" />
-    <h1>{{detailedRecipe.name}}</h1>
-  </div>
-</div>
+import { HttpModule } from '@angular/http';
+import { CommonModule } from '@angular/common';
 
-<div class="row">
-  <div class="col-xs-12">
-    <div class="btn-group">
-      <button class="btn btn-primary dropdown-toggle">
-        Manage Recipe<span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="#">To shopping list</a></li>
-        <li><a href="#">Edit recipe</a></li>
-        <li><a href="#">Delete Recipe</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    {{detailedRecipe.name}}
-  </div>
-</div>
-<div class="row">
-  <div class="col-xs-12">
-    Ingradients
-  </div>
-</div>
-recipe-details.compoennt.ts-------------------->
-@Input() detailedRecipe: Recipe;
-recipes.component.html---------------------->
-<div class="row">
-    <div class="col-md-5">
-      <app-recipe-list (recipedDetails)="showRecipedDetails($event)"></app-recipe-list>
-    </div>
-    <div class="col-md-7">
-        <app-recipe-detail
-                           *ngIf="recipeDescription; else infoText"
-                           [detailedRecipe]="recipeDescription">
-        </app-recipe-detail>
-      <ng-template #infoText>
-        <p>Please select a recipe!</p>
-      </ng-template>
-    </div>
-</div>
-recipes.component.ts------------->
-export class RecipesComponent implements OnInit {
-  recipeDescription: Recipe;
-  constructor() { }
+import { AppComponent } from './app.component';
+import { BasicHighlightDirective } from './basic-highlight/basic-highlight.directive';
+import { BetterHighlightDirective } from './better-highlight/better-hightlight.directive';
+import { UnlessDirective } from './unless.directive';
 
-  ngOnInit() {
-  }
-  showRecipedDetails(selectedRecipe: Recipe) {
-    this.recipeDescription = selectedRecipe;
-  }
-
-}
-recipe-list.component.ts------------->
-export class RecipeListComponent implements OnInit {
-  @Output() recipedDetails = new EventEmitter<Recipe>();
-  recipes: Recipe[] = [
-    new Recipe('the test recipe','this recipe is in test','https://realhousemoms.com' +
-      '/wp-content/uploads/Honey-Butter-Chicken-Easy-Dinner-Recipe-HERO.jpg'),
-    new Recipe('the test recipe one','this recipe is in test one',
-      'https://thewoksoflife.com/wp-content/uploads/2018/06/vegetable-chow-mein-16.jpg')
-  ];
-  
-  constructor() { }
-
-  ngOnInit() {
-  }
-  onRecipeSelect(recipe: Recipe) {
-    this.recipedDetails.emit(recipe);
-  }
-}
-recipe-itm-component.ts--------------->
-export class RecipeItemComponent implements OnInit {
-  @Input() recipe: Recipe;
-  @Output() recipeDetails = new EventEmitter<void>();
-  constructor() { }
-
-  ngOnInit() {
-  }
-  showDetails() {
-    console.log("Details");
-    this.recipeDetails.emit();
-  }
-
-}
-recipe-item.component.html------------>
-<a href="#" class="list-group-item clearfix" (click)="showDetails()">
-  <div class="pull-left">
-    <h4 class="list-group-item-heading">{{recipe.name}}</h4>
-    <p class="list-group-item-text">{{recipe.description}}</p>
-  </div>
-  <span class="pull-right">
-    <img [src]="recipe.imagePath"
-         alt="{{recipe.name}}"
-         class="img-responsive"
-         style="max-height: 50px">
-  </span>
-</a>
-app-component.html------------------->
-<app-header (featureSelected)="onNavigate($event)"></app-header>
+@NgModule({
+  declarations: [
+    AppComponent,
+    BasicHighlightDirective,
+    BetterHighlightDirective,
+    UnlessDirective
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    CommonModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+app.component.html---------------------------------------->
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <app-recipes *ngIf="loadedFeature === 'Recipe'"></app-recipes>
-            <app-shopping-list *ngIf="loadedFeature != 'Recipe'"></app-shopping-list>
-        </div>
-    </div>
-</div>
-app.component.ts---------------->
-export class AppComponent {
-  loadedFeature = 'Recipe';
-  onNavigate(feature: string) {
-    this.loadedFeature = feature;
-  }
-
-}
-
-recipe-list.component.html------------------------>
-<div class="row">
-  <div class="col-xs-12">
-    <button class="btn btn-success">New Recipe</button>
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-primary"
+              (click)="onlyOdd = !onlyOdd">
+        Only show odd numbers
+      </button>
+      <br><br>
+          <ul class="list-group">
+            <div *ngIf="onlyOdd">
+              <li class="list-group-item"
+                  [ngClass]="{odd: odd % 2 !==0}"
+                  [ngStyle]="{backgroundColor : odd % 2 !==0 ? 'lightblue':'transparent'}"
+                  *ngFor="let odd of oddNumbers">
+                {{ odd }}
+              </li>
+            </div>
+            <!--<div *ngIf="!onlyOdd">
+    <li class="list-group-item"
+        [ngClass]="{odd: even % 2 !==0}"
+        [ngStyle]="{backgroundColor : even % 2 !==0 ? 'lightblue':'transparent'}"
+        *ngFor="let even of evenNumbers">
+      {{ even }}
+    </li>
   </div>
-</div>
-<hr>
-<div class="row">
-  <div class="col-xs-12">
-      <app-recipe-item *ngFor="let recipeElement of recipes"
-                       [recipe]="recipeElement"
-                       (recipeDetails)="onRecipeSelect(recipeElement)"></app-recipe-item>
-  </div>
-</div>
-<hr>
-header.component.ts------------------------------>
-export class HeaderComponent implements OnInit {
-  @Output() featureSelected = new EventEmitter<String>();
-  constructor() { }
-
-  ngOnInit() {
-  }
-  onSelect(feature: string) {
-    this.featureSelected.emit(feature);
-  }
-
-}
-header.component.html-------------------------------->
-<nav class = "navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a href="#" class="navbar-brand">Recipe Book</a>
+  <ng-template [ngIf]="!onlyOdd">
+    <div>
+      <li class="list-group-item"
+          [ngClass]="{odd: even % 2 !==0}"
+          [ngStyle]="{backgroundColor : even % 2 !==0 ? 'lightblue':'transparent'}"
+          *ngFor="let even of evenNumbers">
+        {{ even }}
+      </li>
     </div>
-    <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="#" (click)="onSelect('Recipe')">Recipes</a></li>
-        <li><a href="#" (click)="onSelect('Shopping List')">Shopping List</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" role="button">Manage<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Save data</a></li>
-            <li><a href="#">Fetch data</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-shopping-list-component.html-------------->
-<div class="row">
-    <div class="col-md-10">
-        <app-shopping-edit (newItem)="onAddedIngradient($event)"></app-shopping-edit>
-        <hr>
-        <ul class="list-group">
-          <a class="list-group-item"
-             style="cursor: pointer"
-          *ngFor="let ingradients of ingradient">
-            {{ ingradients.name }} ({{ ingradients.amount }})
-          </a>
-        </ul>
-    </div>
-</div>
-shoppinglist.ts--------------->
-  onAddedIngradient(newaddedItem: Ingradients) {
-    this.ingradient.push(newaddedItem);
-  }
-}
-...............>
-export class ShoppingEditComponent implements OnInit {
-  @ViewChild('nameInput') nameInputRef: ElementRef;
-  @ViewChild('amountInput') amountInputRef: ElementRef;
-  @Output() newItem = new EventEmitter<Ingradients>();
-  constructor() { }
-
-  ngOnInit() {
-  }
-  onAddItems() {
-    const newIngradient = new
-      Ingradients(this.nameInputRef.nativeElement.value, this.amountInputRef.nativeElement.value);
-    this.newItem.emit(newIngradient);
-  }
-
-}
------------------------->
-<div class="row">
-        <div class="col-sm-5 form-group">
-          <label for="name"></label>
-          <input type="text" id="name"
-                 class="form-control" #nameInput>
-        </div>
-        <div class="col-sm-2">
-          <label for="amount"></label>
-          <input type="number" id="amount"
-                 class="form-control" #amountInput>
-        </div>
+  </ng-template>-->
+            <div *appUnless="onlyOdd">
+              <li class="list-group-item"
+                  [ngClass]="{odd: even % 2 !==0}"
+                  [ngStyle]="{backgroundColor : even % 2 !==0 ? 'lightblue':'transparent'}"
+                  *ngFor="let even of evenNumbers">
+                {{ even }}
+              </li>
+            </div>
+          </ul>      
+      <p appBasicHighlight>Style me!</p>
+      <p appBetterHighlight [defaultColor]="'lightyellow'" [highlightedColor]="'pink'">Style me!</p>
+      <div [ngSwitch]="value">
+        <p *ngSwitchCase="5">Value is 5</p>
+        <p *ngSwitchCase="10">Value is 10</p>
+        <p *ngSwitchCase="100">Value is 100</p>
+        <p *ngSwitchDefault>Value is Default</p>
       </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <button class="btn btn-success" type="submit" (click)="onAddItems()">Add</button>&nbsp;&nbsp;
- ---------->
+    </div>
+  </div>
+</div>
+ap.component.ts---------------------->
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  numbers = [1, 2, 3, 4, 5];
+  oddNumbers = [1, 3, 5];
+  evenNumbers = [2, 4];
+  onlyOdd = false;
+  value = 10;
+}
+app.component.css------------->
+.container {
+  margin-top: 30px;
+}
+.odd{
+  color : red;
+}
+unless.directive.ts----------------------------->
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[appUnless]'
+})
+export class UnlessDirective {
+  @Input() set appUnless(condition: boolean) {
+    if (!condition) {
+      this.viewref.createEmbeddedView(this.tenplateref);
+    } else {
+      this.viewref.clear();
+    }
+  }
+  constructor(private tenplateref: TemplateRef<any>, private viewref: ViewContainerRef) { }
+
+}
+basic-hilight/basic-hilight.directive----------------->
+import { Directive, ElementRef, OnInit } from '@angular/core';
+@Directive({
+  selector: '[appBasicHighlight]'
+})
+export class BasicHighlightDirective implements OnInit {
+  constructor(private elementRef: ElementRef) {
+  }
+  ngOnInit() {
+    this.elementRef.nativeElement.style.backgroundColor = 'lightgreen';
+  }
+}
+better-hilight/better-highlit.directive.ts---------------->
+import { Directive, OnInit, Renderer2, ElementRef, HostListener, HostBinding, Input } from '@angular/core';
+@Directive({
+  selector : '[appBetterHighlight]'
+})
+export class BetterHighlightDirective implements OnInit{
+  
+  @Input() defaultColor: string = 'transparent';
+  @Input() highlightedColor: string = 'pink';
+  @HostBinding('style.backgroundColor') backgroundColor: string;
+  constructor(private elRef : ElementRef, private renderer: Renderer2) {
+
+  }
+  ngOnInit() {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'pink');
+    this.backgroundColor = this.defaultColor;
+  }
+  @HostListener('mouseenter') mouseover(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'pink');
+    this.backgroundColor = this.highlightedColor;
+  }
+  @HostListener('mouseleave') mouseleave(eventData: Event) {
+    //this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'transparent');
+    this.backgroundColor = this.defaultColor;
+  }
+}
