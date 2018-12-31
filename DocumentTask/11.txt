@@ -1,0 +1,9 @@
+//
+create thre componen : GameControl, Odd , Even
+Game Control have strat and stop the game button
+when starting the game an event (holding a incrementing number) should get emitted each Second(Ref= SetInterval)
+the event should listenable  from outside the component
+when stopping the game no more event should get emitted(ClearInterval(Ref))
+A new Odd component should get created for every odd number emitted the same should happen for even component
+simply output even number and odd number the two component
+style the element paragraph holding your text diferrently in both component
