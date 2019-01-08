@@ -5,13 +5,14 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
-    <img [src]="detailedRecipe.imagePath"
-         alt="{{detailedRecipe.name}}"
+    <img [src]="recipe.imagePath"
+         alt="{{recipe.name}}"
          class="img-responsive"
          style="max-height:200px; max-width:300px" />
-    <h1>{{detailedRecipe.name}}</h1>
+    <h1>{{recipe.name}}</h1>
   </div>
 </div>
+
 <div class="row">
   <div class="col-xs-12">
     <div class="btn-group" appDropDown>
@@ -19,7 +20,7 @@
         Manage Recipe<span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><a href="#">To shopping list</a></li>
+        <li><a (click)="addShoppingList()" style="cursor:pointer;">To shopping list</a></li>
         <li><a href="#">Edit recipe</a></li>
         <li><a href="#">Delete Recipe</a></li>
       </ul>
@@ -28,11 +29,16 @@
 </div>
 <div class="row">
   <div class="col-xs-12">
-    {{detailedRecipe.name}}
+    {{recipe.name}}
   </div>
 </div>
 <div class="row">
   <div class="col-xs-12">
-    Ingradients
+    <ul class="list-group">
+      <li class="list-group-item"
+          *ngFor="let ingradient of recipe.ingradient">
+        {{ ingradient.name }} - {{ ingradient.amount }}
+      </li>
+    </ul>
   </div>
 </div>
