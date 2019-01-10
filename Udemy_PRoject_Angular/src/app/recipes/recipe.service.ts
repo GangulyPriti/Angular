@@ -29,6 +29,9 @@ export class RecipeService {
   getRecipes() {
     return this.recipes.slice();
   }
+  getRecipe(index: number) {
+    return this.recipes[index];
+  }
   addIngradientToShoppingList(ingradient: Ingradients[]) {
     this.slService.addingIngradients(ingradient);
   }
